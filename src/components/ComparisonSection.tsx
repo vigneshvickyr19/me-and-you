@@ -31,37 +31,49 @@ const ComparisonSection = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-card overflow-hidden"
         >
-          <div className="grid grid-cols-3 text-sm font-bold border-b border-border/50 px-6 py-4">
-            <span className="text-muted-foreground">Features</span>
-            <span className="text-center text-foreground">U&M</span>
-            <span className="text-center text-muted-foreground">Other Dating Apps</span>
-          </div>
-          {rows.map((row, i) => (
-            <div
-              key={row.feature}
-              className={`grid grid-cols-3 px-6 py-4 text-sm items-center ${
-                i < rows.length - 1 ? "border-b border-border/30" : ""
-              }`}
-            >
-              <span className="text-muted-foreground">{row.feature}</span>
-              <div className="flex justify-center">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Check className="w-4 h-4 text-primary" />
-                </div>
+          {/* Gradient border wrapper */}
+          <div className="rounded-2xl p-[1px]"
+            style={{
+              background: "linear-gradient(180deg, hsl(0 0% 100% / 0.1), hsl(0 0% 100% / 0.03), transparent)",
+            }}
+          >
+            <div className="bg-card rounded-2xl overflow-hidden">
+              {/* Header */}
+              <div className="grid grid-cols-3 text-sm font-bold border-b border-border/50 px-6 py-5">
+                <span className="text-muted-foreground">Features</span>
+                <span className="text-center text-foreground">U&M</span>
+                <span className="text-center text-muted-foreground">Other Dating Apps</span>
               </div>
-              <div className="flex justify-center">
-                {row.others === false ? (
-                  <div className="w-8 h-8 rounded-full bg-destructive/20 flex items-center justify-center">
-                    <X className="w-4 h-4 text-destructive" />
+              {/* Rows */}
+              {rows.map((row, i) => (
+                <div
+                  key={row.feature}
+                  className={`grid grid-cols-3 px-6 py-4 text-sm items-center transition-colors hover:bg-muted/20 ${
+                    i < rows.length - 1 ? "border-b border-border/20" : ""
+                  }`}
+                >
+                  <span className="text-muted-foreground">{row.feature}</span>
+                  <div className="flex justify-center">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center border border-primary/20"
+                      style={{ background: "linear-gradient(135deg, hsl(24 90% 53% / 0.2), hsl(24 90% 53% / 0.05))" }}
+                    >
+                      <Check className="w-4 h-4 text-primary" />
+                    </div>
                   </div>
-                ) : (
-                  <span className="text-muted-foreground text-xs">{row.others}</span>
-                )}
-              </div>
+                  <div className="flex justify-center">
+                    {row.others === false ? (
+                      <div className="w-8 h-8 rounded-full bg-destructive/10 border border-destructive/20 flex items-center justify-center">
+                        <X className="w-4 h-4 text-destructive" />
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">{row.others}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </motion.div>
       </div>
     </section>

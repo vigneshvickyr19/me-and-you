@@ -66,13 +66,32 @@ const WhyDifferentSection = () => {
             <motion.div
               key={feature.title}
               variants={item}
-              className="glass-card-hover p-6"
+              className="group relative"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                <feature.icon className="w-6 h-6 text-primary" />
+              {/* Gradient border wrapper */}
+              <div className="relative rounded-2xl p-[1px] h-full"
+                style={{
+                  background: "linear-gradient(180deg, hsl(0 0% 100% / 0.1), hsl(0 0% 100% / 0.03), transparent)",
+                }}
+              >
+                <div className="bg-card rounded-2xl p-6 h-full transition-all duration-300 group-hover:bg-card/80 relative overflow-hidden">
+                  {/* Icon */}
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 border border-primary/20"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(24 90% 53% / 0.15), hsl(24 90% 53% / 0.05))",
+                    }}
+                  >
+                    <feature.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 text-foreground">{feature.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+
+                  {/* Hover glow */}
+                  <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-15 blur-[30px] transition-opacity duration-500"
+                    style={{ background: "hsl(24 90% 53%)" }}
+                  />
+                </div>
               </div>
-              <h3 className="text-lg font-bold mb-2 text-foreground">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>

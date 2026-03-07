@@ -4,9 +4,9 @@ import profile2 from "@/assets/profile-2.jpg";
 import profile3 from "@/assets/profile-3.jpg";
 
 const profiles = [
-  { img: profile1, name: "Emma W., 24", rotation: -8, x: -40 },
-  { img: profile2, name: "Jenny Wilson, 26", rotation: 0, x: 0, featured: true },
-  { img: profile3, name: "Mia S., 23", rotation: 8, x: 40 },
+  { img: profile1, name: "Emma W., 24", rotation: -12, scale: 0.9, zIndex: 10 },
+  { img: profile2, name: "Jenny Wilson, 26", rotation: 0, scale: 1, zIndex: 20, featured: true },
+  { img: profile3, name: "Mia S., 23", rotation: 12, scale: 0.9, zIndex: 10 },
 ];
 
 const HeroSection = () => {
@@ -51,36 +51,82 @@ const HeroSection = () => {
         </div>
       </motion.div>
 
-      {/* Profile cards */}
+      {/* Phone-style Profile Cards */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="relative mt-16 flex items-end justify-center z-10"
+        className="relative mt-16 flex items-center justify-center z-10"
+        style={{ perspective: "1200px" }}
       >
         {profiles.map((profile, i) => (
           <motion.div
             key={profile.name}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 + i * 0.15 }}
-            className={`relative rounded-2xl overflow-hidden border border-border/50 shadow-2xl ${
-              profile.featured ? "w-48 h-64 md:w-56 md:h-72 z-20" : "w-36 h-52 md:w-44 md:h-60 z-10 opacity-80"
-            }`}
+            initial={{ opacity: 0, y: 40, rotateZ: profile.rotation }}
+            animate={{ opacity: 1, y: 0, rotateZ: profile.rotation }}
+            transition={{ delay: 0.6 + i * 0.15, duration: 0.6 }}
+            className="relative"
             style={{
-              transform: `rotate(${profile.rotation}deg) translateX(${profile.x}px)`,
-              marginLeft: i > 0 ? "-24px" : "0",
+              zIndex: profile.zIndex,
+              marginLeft: i > 0 ? "-32px" : "0",
+              transform: `rotate(${profile.rotation}deg) scale(${profile.scale})`,
             }}
           >
-            <img src={profile.img} alt={profile.name} className="w-full h-full object-cover" />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent p-3">
-              <p className="text-foreground text-sm font-semibold">{profile.name}</p>
+            {/* Phone frame */}
+            <div className={`relative rounded-[24px] overflow-hidden border-2 shadow-2xl ${
+              profile.featured 
+                ? "w-44 h-[280px] md:w-56 md:h-[360px] border-primary/40" 
+                : "w-36 h-[230px] md:w-44 md:h-[290px] border-border/40 opacity-85"
+            }`}
+              style={{
+                background: "linear-gradient(180deg, hsl(0 0% 12%), hsl(0 0% 8%))",
+                boxShadow: profile.featured 
+                  ? "0 20px 60px rgba(241, 111, 37, 0.2), 0 8px 24px rgba(0,0,0,0.5)" 
+                  : "0 16px 40px rgba(0,0,0,0.5)",
+              }}
+            >
+              {/* Phone notch */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-5 bg-background rounded-b-xl z-30" />
+              
+              {/* Profile image */}
+              <img src={profile.img} alt={profile.name} className="w-full h-full object-cover" />
+              
+              {/* Bottom gradient overlay with name */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/80 to-transparent p-4 pt-12">
+                <div className="flex items-center gap-2">
+                  {profile.featured && (
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                  )}
+                  <p className="text-foreground text-sm font-bold">{profile.name}</p>
+                </div>
+                {profile.featured && (
+                  <p className="text-muted-foreground text-[10px] mt-0.5">Active now</p>
+                )}
+              </div>
+
+              {/* Online indicator for featured */}
+              {profile.featured && (
+                <div className="absolute top-8 right-3 bg-primary/90 text-primary-foreground text-[9px] font-bold px-2 py-0.5 rounded-full">
+                  LIVE
+                </div>
+              )}
             </div>
-            {profile.featured && (
-              <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
-            )}
           </motion.div>
         ))}
+
+        {/* Decorative floating elements */}
+        <motion.div
+          animate={{ y: [-8, 8, -8] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-6 -right-8 w-12 h-12 rounded-full opacity-40 blur-md"
+          style={{ background: "hsl(24 90% 53%)" }}
+        />
+        <motion.div
+          animate={{ y: [6, -6, 6] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-4 -left-6 w-8 h-8 rounded-full opacity-30 blur-md"
+          style={{ background: "hsl(24 90% 53%)" }}
+        />
       </motion.div>
     </section>
   );

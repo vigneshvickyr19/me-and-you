@@ -48,7 +48,6 @@ const Footer = () => {
     <footer id="footer" className="bg-[#0A0A0A] border-t border-white/5 py-20 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          {/* Brand Section */}
           <div className="md:col-span-4">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(255,127,71,0.15)] flex items-center justify-center bg-white/5">

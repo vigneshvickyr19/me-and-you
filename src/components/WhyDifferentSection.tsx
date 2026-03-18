@@ -49,11 +49,11 @@ const WhyDifferentSection = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/10 mb-8">
-            <div className="w-3.5 h-3.5 rounded-sm bg-[#FF7F47] flex items-center justify-center transform rotate-12">
-              <span className="text-[9px] text-black">★</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-white/10 shadow-lg mb-8">
+            <div className="w-4 h-4 rounded-sm bg-[#FF7F47] flex items-center justify-center transform rotate-12">
+              <span className="text-[10px] text-black">★</span>
             </div>
-            <span className="text-[10px] font-bold text-white/90 uppercase tracking-wider">Why</span>
+            <span className="text-xs font-bold text-white/90 uppercase tracking-wider">Why</span>
           </div>
 
           <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-white">

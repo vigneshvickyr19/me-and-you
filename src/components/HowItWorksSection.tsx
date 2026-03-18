@@ -31,7 +31,12 @@ const HowItWorksSection = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="section-label justify-center mb-4">Easy</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-white/10 shadow-lg mb-4">
+            <div className="w-4 h-4 rounded-sm bg-[#FF7F47] flex items-center justify-center transform rotate-12">
+              <span className="text-[10px] text-black">★</span>
+            </div>
+            <span className="text-xs font-bold text-white/90 uppercase tracking-wider">Easy</span>
+          </div>
           <h2 className="text-3xl md:text-5xl font-extrabold mt-4">
             How it <span className="gradient-text">works</span>
           </h2>

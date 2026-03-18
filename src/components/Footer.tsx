@@ -48,7 +48,6 @@ const Footer = () => {
     <footer id="footer" className="bg-[#0A0A0A] border-t border-white/5 py-20 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          {/* Brand Section */}
           <div className="md:col-span-4">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(255,127,71,0.15)] flex items-center justify-center bg-white/5">
@@ -64,6 +63,8 @@ const Footer = () => {
                 <a
                   key={social.name}
                   href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-[#FF7F47] hover:bg-[#FF7F47] hover:text-white transition-all duration-300 group"
                 >
                   <social.icon size={18} className="transition-transform group-hover:scale-110" />
@@ -82,6 +83,8 @@ const Footer = () => {
                     <li key={link.name}>
                       <Link 
                         to={link.path} 
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-zinc-500 text-sm hover:text-[#FF7F47] transition-colors duration-200"
                       >
                         {link.name}
@@ -99,9 +102,9 @@ const Footer = () => {
             © 2026 M&U. All rights reserved.
           </p>
           <div className="flex gap-6 text-zinc-600 text-xs uppercase tracking-widest font-medium">
-            <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <Link to="/cookies" className="hover:text-white transition-colors">Cookies</Link>
+            <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Privacy</Link>
+            <Link to="/terms" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Terms</Link>
+            <Link to="/cookies" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cookies</Link>
           </div>
         </div>
       </div>

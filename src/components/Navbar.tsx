@@ -42,6 +42,13 @@ const Navbar = () => {
     setIsScrolled(latest > 50);
   });
 
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <motion.nav
       initial="visible"
@@ -62,7 +69,11 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group cursor-pointer">
+        <Link 
+          to="/" 
+          onClick={handleLogoClick}
+          className="flex items-center gap-2.5 group cursor-pointer"
+        >
           <div className="relative overflow-hidden rounded-xl">
             <img src={appIcon} alt="Me & You" className="w-9 h-9 transition-transform duration-500 group-hover:scale-110" />
             <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />

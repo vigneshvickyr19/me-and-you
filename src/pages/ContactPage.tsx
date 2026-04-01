@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Mail, Shield, Clock, Send, CheckCircle2, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,23 +16,73 @@ const ContactPage = () => {
     message: ""
   });
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Helper to check for existing submission throttle
+  const checkThrottle = () => {
+    const cookies = document.cookie.split(';');
+    return cookies.some(cookie => cookie.trim().startsWith('contact_throttle='));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Senior-level throttling: Prevent spam at the browser level
+    if (checkThrottle()) {
+      toast({
+        variant: "destructive",
+        title: "Access Restricted",
+        description: "You've already sent a message. Please wait 24 hours.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    // Construct mailto link for direct client communication without API
-    const mailtoLink = `mailto:vickyrravi@gmail.com?subject=${encodeURIComponent(formData.subject + " - " + formData.name)}&body=${encodeURIComponent("From: " + formData.name + " (" + formData.email + ")\n\n" + formData.message)}`;
-    
-    // Trigger native email client
-    window.location.href = mailtoLink;
-    
-    // Simulate short processing time for UI feedback
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast.success("Opening your email client...");
+
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://push-notification-ve9s.onrender.com";
+      const response = await fetch(`${baseUrl}/api/support/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Set cookie for 24-hour throttle
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + 1);
+        document.cookie = `contact_throttle=true; expires=${expiry.toUTCString()}; path=/; SameSite=Strict`;
+
+        setIsSubmitted(true);
+        toast({
+          title: "Message Sent!",
+          description: result.message || "We will get back to you shortly.",
+        });
+        
+        // Reset form for future use
+        setFormData({
+          name: "",
+          email: "",
+          subject: "General Inquiry",
+          message: ""
+        });
+      } else {
+        throw new Error(result.message || "Failed to send message");
+      }
+    } catch (error) {
+      console.error("Contact API Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const supportCards = [

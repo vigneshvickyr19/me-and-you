@@ -1,5 +1,5 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as ToasterSonner } from "@/components/ui/sonner";
+import { Toaster as ToasterShadcn } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
@@ -25,8 +25,6 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <ToasterSonner />
       <HashRouter>
         <ScrollToTop />
         <Routes>
@@ -45,9 +43,10 @@ const App = () => (
           <Route path="/moderation" element={<LegalPage type="moderation" />} />
           <Route path="/contact" element={<ContactPage />} />
           
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>
+      <ToasterShadcn />
+      <Toaster position="bottom-center" richColors closeButton theme="dark" />
     </TooltipProvider>
   </QueryClientProvider>
 );

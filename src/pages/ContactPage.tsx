@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Shield, Clock, Send, CheckCircle2, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,6 +16,7 @@ const ContactPage = () => {
     message: ""
   });
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   // Helper to check for existing submission throttle
   const checkThrottle = () => {
@@ -28,8 +29,10 @@ const ContactPage = () => {
     
     // Senior-level throttling: Prevent spam at the browser level
     if (checkThrottle()) {
-      toast.error("Limit Reached", {
-        description: "You've already sent a message today. Please wait 24 hours."
+      toast({
+        variant: "destructive",
+        title: "Access Restricted",
+        description: "You've already sent a message. Please wait 24 hours.",
       });
       return;
     }
@@ -55,14 +58,27 @@ const ContactPage = () => {
         document.cookie = `contact_throttle=true; expires=${expiry.toUTCString()}; path=/; SameSite=Strict`;
 
         setIsSubmitted(true);
-        toast.success(result.message || "Message sent successfully!");
+        toast({
+          title: "Message Sent!",
+          description: result.message || "We will get back to you shortly.",
+        });
+        
+        // Reset form for future use
+        setFormData({
+          name: "",
+          email: "",
+          subject: "General Inquiry",
+          message: ""
+        });
       } else {
         throw new Error(result.message || "Failed to send message");
       }
     } catch (error) {
       console.error("Contact API Error:", error);
-      toast.error("Submission Failed", {
-        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again later."
+      toast({
+        variant: "destructive",
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
       });
     } finally {
       setIsSubmitting(false);

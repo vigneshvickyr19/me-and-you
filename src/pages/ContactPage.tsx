@@ -89,14 +89,14 @@ const ContactPage = () => {
     {
       icon: Mail,
       title: "Support Email",
-      value: "support@meandyou.com",
+      value: "reachmandyou@gmail.com",
       description: "Our dedicated team is here to help.",
       color: "bg-blue-500/10 text-blue-500"
     },
     {
       icon: Shield,
       title: "Safety Team",
-      value: "safety@meandyou.com",
+      value: "reachmandyou@gmail.com",
       description: "Report issues or safety concerns.",
       color: "bg-orange-500/10 text-orange-500"
     },

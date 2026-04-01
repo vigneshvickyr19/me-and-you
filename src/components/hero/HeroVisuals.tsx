@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { Phone, Video, MapPin, Heart, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Phone, Video, MapPin, Heart, X, Users, ShieldCheck, Zap, Sparkles } from "lucide-react";
 import profile1 from "@/assets/profile-1.jpg";
 import profile2 from "@/assets/profile-2.jpg";
 import profile3 from "@/assets/profile-3.jpg";
@@ -28,9 +28,75 @@ const sideBubbles = {
   ],
 };
 
+// Flying elements for extra dynamism
+const FlyingHeart = ({ delay, y, direction = 'right' }: { delay: number, y: string, direction?: 'left' | 'right' }) => {
+  const isRight = direction === 'right';
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0, x: isRight ? -100 : "100%", y: 0 }}
+      animate={{ 
+        opacity: [0, 1, 1, 0],
+        scale: [0.5, 1, 1.2, 0.5],
+        x: isRight ? [-100, 1600] : [1600, -200],
+        y: [0, -40, 40, -10, 0],
+      }}
+      transition={{ 
+        duration: isRight ? 15 : 18, // Slightly different speeds for depth
+        delay, 
+        repeat: Infinity, 
+        ease: "linear" 
+      }}
+      className="absolute pointer-events-none text-primary/20 z-10 will-change-transform"
+      style={{ left: 0, top: y }}
+    >
+      <Heart size={24} fill="currentColor" className="drop-shadow-[0_0_10px_rgba(255,127,71,0.2)]" />
+    </motion.div>
+  );
+};
+
+const FlyingSparkle = ({ delay, x, y }: { delay: number, x: string, y: string }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{ 
+      opacity: [0, 1, 0],
+      scale: [0.5, 1.2, 0.5],
+      rotate: [0, 180, 360],
+      x: [0, -30, 30, 0],
+      y: [0, -50, -100, -150],
+    }}
+    transition={{ 
+      duration: 3, 
+      delay, 
+      repeat: Infinity, 
+      ease: "linear" 
+    }}
+    className="absolute pointer-events-none text-primary/30 z-10"
+    style={{ left: x, top: y }}
+  >
+    <Sparkles size={16} />
+  </motion.div>
+);
+
 const HeroVisuals = () => {
   return (
     <div className="relative mt-8 w-full max-w-7xl mx-auto h-[480px] flex items-center justify-center" style={{ perspective: "1500px" }}>
+      {/* Dynamic Flying Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Left Side Flyers */}
+        <FlyingSparkle delay={0} x="10%" y="80%" />
+        <FlyingSparkle delay={1.5} x="15%" y="70%" />
+        {/* Continuous Stream of Hearts - Bi-Directional & Optimized */}
+        {/* Left to Right */}
+        <FlyingHeart delay={0} y="15%" direction="right" />
+        <FlyingHeart delay={5} y="45%" direction="right" />
+        <FlyingHeart delay={10} y="75%" direction="right" />
+        
+        {/* Right to Left */}
+        <FlyingHeart delay={2.5} y="30%" direction="left" />
+        <FlyingHeart delay={7.5} y="60%" direction="left" />
+        <FlyingHeart delay={12.5} y="90%" direction="left" />
+      </div>
+
       {/* Performance-Optimized Glowing Connection Network */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-0" viewBox="-600 -250 1200 500">
         <defs>
@@ -147,6 +213,82 @@ const HeroVisuals = () => {
           )}
         </motion.div>
       ))}
+
+      {/* Modern Status Widgets - Floating Left & Right */}
+      {/* Left: Active Nearby Widget */}
+      <motion.div
+        initial={{ opacity: 0, x: -50, y: 20 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
+        className="absolute left-[5%] top-[20%] z-50 hidden xl:block"
+      >
+        <motion.div 
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="glass-card-hover p-4 min-w-[180px] bg-black/60 border-white/5"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+              <Users className="text-primary" size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Live Now</p>
+              <h4 className="text-sm font-bold text-white">Nearby Activity</h4>
+            </div>
+          </div>
+          
+          <div className="flex -space-x-2 mb-3">
+            {[profile1, profile2, profile3].map((img, i) => (
+              <img key={i} src={img} className="w-8 h-8 rounded-full border-2 border-zinc-900 object-cover" alt="active user" />
+            ))}
+            <div className="w-8 h-8 rounded-full border-2 border-zinc-900 bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-white">
+              +8
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+            <span className="text-[11px] font-medium text-white/70">12 people active nearby</span>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Right: Verified Match Widget */}
+      <motion.div
+        initial={{ opacity: 0, x: 50, y: -20 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 1.4, duration: 0.8, ease: "easeOut" }}
+        className="absolute right-[5%] bottom-[25%] z-50 hidden xl:block"
+      >
+        <motion.div 
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="glass-card-hover p-4 min-w-[200px] bg-black/60 border-white/5"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-full bg-[#FF7F47]/20 flex items-center justify-center">
+              <ShieldCheck className="text-primary" size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-[#FF7F47] font-bold">Identity Verified</p>
+              <h4 className="text-sm font-bold text-white">Real Person Policy</h4>
+            </div>
+          </div>
+          
+          <div className="bg-white/5 rounded-lg p-2 flex items-center gap-2 mb-2 border border-white/5">
+            <div className="w-6 h-6 rounded bg-primary/20 flex items-center justify-center">
+              <Zap className="text-primary fill-primary" size={12} />
+            </div>
+            <span className="text-[10px] font-bold text-white/90">98% Match Probability</span>
+          </div>
+          
+          <p className="text-[11px] text-white/50 leading-tight">
+            Advanced biometric verification ensures all members are authentic.
+          </p>
+        </motion.div>
+      </motion.div>
 
       {/* Fanned Profile Cards */}
       <div className="relative flex items-center justify-center w-full h-full">

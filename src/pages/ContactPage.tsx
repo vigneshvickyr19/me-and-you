@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Mail, Shield, Clock, Send, CheckCircle2, ArrowLeft } from "lucide-react";
@@ -17,22 +17,56 @@ const ContactPage = () => {
   });
   const navigate = useNavigate();
 
+  // Helper to check for existing submission throttle
+  const checkThrottle = () => {
+    const cookies = document.cookie.split(';');
+    return cookies.some(cookie => cookie.trim().startsWith('contact_throttle='));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Senior-level throttling: Prevent spam at the browser level
+    if (checkThrottle()) {
+      toast.error("Limit Reached", {
+        description: "You've already sent a message today. Please wait 24 hours."
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    // Construct mailto link for direct client communication without API
-    const mailtoLink = `mailto:vickyrravi@gmail.com?subject=${encodeURIComponent(formData.subject + " - " + formData.name)}&body=${encodeURIComponent("From: " + formData.name + " (" + formData.email + ")\n\n" + formData.message)}`;
-    
-    // Trigger native email client
-    window.location.href = mailtoLink;
-    
-    // Simulate short processing time for UI feedback
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast.success("Opening your email client...");
+
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://push-notification-ve9s.onrender.com";
+      const response = await fetch(`${baseUrl}/api/support/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Set cookie for 24-hour throttle
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + 1);
+        document.cookie = `contact_throttle=true; expires=${expiry.toUTCString()}; path=/; SameSite=Strict`;
+
+        setIsSubmitted(true);
+        toast.success(result.message || "Message sent successfully!");
+      } else {
+        throw new Error(result.message || "Failed to send message");
+      }
+    } catch (error) {
+      console.error("Contact API Error:", error);
+      toast.error("Submission Failed", {
+        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again later."
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const supportCards = [
